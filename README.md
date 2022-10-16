@@ -2,7 +2,7 @@ The Powder Toy - July 2021
 ==========================
 I have to idea what im doing -IEATDIRT
 
-Get the latest version [from the Powder Toy website](https://powdertoy.co.uk/Download.html).
+Get the latest vanilla version [from the Powder Toy website](https://powdertoy.co.uk/Download.html).
 
 To use online features such as saving, you need to [register an account](https://powdertoy.co.uk/Register.html).
 You can also visit [the official TPT forum](https://powdertoy.co.uk/Discussions/Categories/Index.html).
