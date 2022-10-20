@@ -576,6 +576,11 @@ void GameView::NotifyToolListChanged(GameModel * sender)
 		else
 			tempButton = new ToolButton(ui::Point(currentX, YRES+1), ui::Point(30, 18), tool->GetName(), tool->GetIdentifier(), tool->GetDescription());
 
+		tempButton->clipRectX = 1;
+		tempButton->clipRectY = YRES + 1;
+		tempButton->clipRectW = XRES - 1;
+		tempButton->clipRectH = 18;
+
 		//currentY -= 17;
 		currentX -= 31;
 		tempButton->tool = tool;
@@ -933,7 +938,7 @@ ByteString GameView::TakeScreenshot(int captureUI, int fileType)
 	std::string date = format::UnixtimeToDate(screenshotTime, "%Y-%m-%d %H.%M.%S");
 	ByteString filename = ByteString::Build("screenshot ", date, suffix, extension);
 
-	Client::Ref().WriteFile(data, filename);
+	Platform::WriteFile(data, filename);
 	doScreenshot = false;
 	lastScreenshotTime = screenshotTime;
 
@@ -1014,10 +1019,6 @@ void GameView::updateToolButtonScroll()
 		for (auto *button : toolButtons)
 		{
 			button->Position.X -= offsetDelta;
-			if (button->Position.X + button->Size.X <= 0 || (button->Position.X + button->Size.X) > XRES - 2)
-				button->Visible = false;
-			else
-				button->Visible = true;
 		}
 
 		// Ensure that mouseLeave events are make their way to the buttons should they move from underneath the mouse pointer
@@ -1803,7 +1804,24 @@ void GameView::DoExit()
 void GameView::DoDraw()
 {
 	Window::DoDraw();
+	constexpr std::array<int, 9> fadeout = { { // * Gamma-corrected.
+		255, 195, 145, 103, 69, 42, 23, 10, 3
+	} };
+	auto *g = GetGraphics();
+	for (auto x = 0U; x < fadeout.size(); ++x)
+	{
+		g->draw_line(x, YRES + 1, x, YRES + 18, 0, 0, 0, fadeout[x]);
+		g->draw_line(XRES - x, YRES + 1, XRES - x, YRES + 18, 0, 0, 0, fadeout[x]);
+	}
+
 	c->Tick();
+	{
+		int x = 0;
+		int y = 0;
+		int w = WINDOWW;
+		int h = WINDOWH;
+		g->SetClipRect(x, y, w, h); // reset any nonsense cliprect Lua left configured
+	}
 }
 
 void GameView::NotifyNotificationsChanged(GameModel * sender)
@@ -2147,7 +2165,7 @@ void GameView::OnDraw()
 
 			ByteString filename = ByteString::Build("recordings", PATH_SEP, recordingFolder, PATH_SEP, "frame_", Format::Width(recordingIndex++, 6), ".ppm");
 
-			Client::Ref().WriteFile(data, filename);
+			Platform::WriteFile(data, filename);
 		}
 
 		if (logEntries.size())
@@ -2297,7 +2315,6 @@ void GameView::OnDraw()
 		g->fillrect(XRES-20-textWidth, 12, textWidth+8, 15, 0, 0, 0, int(alpha*0.5f));
 		g->drawtext(XRES-16-textWidth, 16, sampleInfo.Build(), 255, 255, 255, int(alpha*0.75f));
 
-#ifndef OGLI
 		if (wavelengthGfx)
 		{
 			int i, cr, cg, cb, j, h = 3, x = XRES-19-textWidth, y = 10;
@@ -2332,7 +2349,6 @@ void GameView::OnDraw()
 				}
 			}
 		}
-#endif
 
 		if (showDebug)
 		{
