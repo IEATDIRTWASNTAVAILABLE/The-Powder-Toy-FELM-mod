@@ -4,9 +4,9 @@ void Element::Element_FELM()
 {
 	Identifier = "DEFAULT_PT_FELM";
 	Name = "FELM";
-	Colour = PIXPACK(0x303030);
+	Colour = PIXPACK(0xFFC7BE06);
 	MenuVisible = 1;
-	MenuSection = SC_SPECIAL;
+	MenuSection = SC_SOLIDS;
 	Enabled = 1;
 
 	Advection = 0.0f;

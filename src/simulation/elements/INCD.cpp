@@ -6,7 +6,7 @@ void Element::Element_INCD()
 	Name = "INCD";
 	Colour = PIXPACK(0x303030);
 	MenuVisible = 1;
-	MenuSection = SC_SPECIAL;
+	MenuSection = SC_POWERED;
 	Enabled = 1;
 
 	Advection = 0.0f;
