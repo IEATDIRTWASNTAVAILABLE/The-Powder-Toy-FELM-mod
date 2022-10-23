@@ -1,6 +1,7 @@
 The Powder Toy - July 2021
 ==========================
 I have to idea what im doing -IEATDIRT
+i again have no idea what im doing -IEATDIRT a few days later
 
 Get the latest vanilla version [from the Powder Toy website](https://powdertoy.co.uk/Download.html).
 
