@@ -3,7 +3,7 @@
 void Element::Element_INCD()
 {
 	Identifier = "DEFAULT_PT_INCD";
-	Name = "INCD";
+	Name = "INDC";
 	Colour = PIXPACK(0x303030);
 	MenuVisible = 1;
 	MenuSection = SC_ELEC;
