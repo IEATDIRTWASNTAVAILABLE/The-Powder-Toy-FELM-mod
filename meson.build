@@ -56,6 +56,11 @@ endif
 
 is_static = static_variant != 'none'
 is_debug = get_option('optimization') in [ '0', 'g' ]
+enforce_https = get_option('enforce_https')
+
+if not is_debug and not enforce_https
+	error('refusing to build a release binary with enforce_https=false')
+endif
 
 tpt_libs_static = 'none'
 if static_variant == 'prebuilt'
@@ -68,7 +73,7 @@ tpt_libs_debug = is_debug ? 'debug' : 'release'
 tpt_libs_variant = '@0@-@1@-@2@-@3@'.format(host_arch, host_platform, host_libc, tpt_libs_static)
 tpt_libs_vtag = get_option('tpt_libs_vtag')
 if tpt_libs_vtag == ''
-	tpt_libs_vtag = 'v20221020221431'
+	tpt_libs_vtag = 'v20221108204019'
 endif
 if tpt_libs_static != 'none'
 	if tpt_libs_variant not in [
@@ -171,6 +176,7 @@ fftw_dep = enable_gravfft ? dependency('fftw3f', static: is_static) : []
 
 threads_dep = dependency('threads')
 zlib_dep = dependency('zlib', static: is_static)
+png_dep = dependency('libpng16', static: is_static)
 sdl2_dep = dependency('sdl2', static: is_static)
 bzip2_dep = dependency('bzip2', static: is_static)
 json_dep = dependency('jsoncpp', static: is_static)
@@ -322,6 +328,7 @@ conf_data.set('SERVER', '"@0@"'.format(get_option('server')))
 conf_data.set('STATICSERVER', '"@0@"'.format(get_option('static_server')))
 conf_data.set('IDENT_PLATFORM', '"@0@"'.format(ident_platform))
 conf_data.set('IDENT', '"@0@-@1@-@2@"'.format(host_arch, host_platform, host_libc).to_upper())
+conf_data.set('ENFORCE_HTTPS', enforce_https)
 conf_data.set('APPNAME', get_option('app_name'))
 conf_data.set('APPCOMMENT', get_option('app_comment'))
 conf_data.set('APPEXE', get_option('app_exe'))
@@ -349,6 +356,7 @@ if get_option('build_powder')
 	powder_deps = [
 		threads_dep,
 		zlib_dep,
+		png_dep,
 		sdl2_dep,
 		lua_dep,
 		curl_dep,
@@ -387,14 +395,19 @@ if get_option('build_render')
 		zlib_dep,
 		bzip2_dep,
 		json_dep,
+		png_dep,
 	]
+	render_link_args = project_link_args
+	if host_platform == 'linux' and is_static
+		render_link_args += [ '-static' ]
+	endif
 	executable(
 		'render',
 		sources: render_files,
 		include_directories: [ project_inc, render_inc ],
 		c_args: project_c_args,
 		cpp_args: project_cpp_args,
-		link_args: project_link_args,
+		link_args: render_link_args,
 		dependencies: render_deps,
 	)
 endif
@@ -403,8 +416,10 @@ if get_option('build_font')
 	font_deps = [
 		threads_dep,
 		zlib_dep,
+		png_dep,
 		sdl2_dep,
 		bzip2_dep,
+		json_dep,
 	]
 	executable(
 		'font',

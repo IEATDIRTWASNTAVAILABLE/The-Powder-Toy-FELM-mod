@@ -77,9 +77,10 @@ jobs:
           RELEASE_NAME: ${{ needs.prepare.outputs.release_name }}
           RELEASE_TYPE: ${{ needs.prepare.outputs.release_type }}
           MOD_ID: ${{ needs.prepare.outputs.mod_id }}
+          SEPARATE_DEBUG: ${{ matrix.separate_debug }}
+          PACKAGE_MODE: ${{ matrix.package_mode }}
           ASSET_PATH: ${{ matrix.asset_path }}
           DEBUG_ASSET_PATH: ${{ matrix.debug_asset_path }}
-          SEPARATE_DEBUG: ${{ matrix.separate_debug }}
       - uses: LBPHacker/upload-release-asset@v2 # TODO-NTL: ship licenses
         if: needs.prepare.outputs.do_release == 'yes' && matrix.publish == 'yes'
         env:
@@ -120,7 +121,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.asset_name }}
-      - run: mv ${{ matrix.asset_name }}/${{ matrix.asset_path }} ${{ matrix.starcatcher_name }}
+      - run: mv ${{ matrix.asset_path }} ${{ matrix.starcatcher_name }}
       - run: sudo apt update && sudo apt install lftp && bash -c './.github/starcatcher-publish.sh'
         env:
           PUBLISH_HOSTPORT: ${{ secrets.STARCATCHER_PUBLISH_HOSTPORT }}
