@@ -192,7 +192,8 @@ simulation_elem_ids = [
 	[ 'ROCK',   190 ],
 	[ 'LITH',   191 ],
 	[ 'FELM',   192 ],
-	[ 'INCD',   193 ]
+	[ 'INCD',   193 ],
+	[ 'VBLQ',   194 ]
 ]
 
 simulation_elem_src = []

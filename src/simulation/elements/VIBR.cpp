@@ -186,6 +186,12 @@ int Element_VIBR_update(UPDATE_FUNC_ARGS)
 					sim->part_change_type(i,x,y,PT_BVBR);
 					sim->pv[y/CELL][x/CELL] -= 1;
 				}
+				//VIBR+DUST=VBLQ
+				if (parts[i].type != PT_BVBR && TYP(r) == PT_DUST)
+				{
+					sim->part_change_type(i,x,y,PT_VBLQ);
+					sim->pv[y/CELL][x/CELL] -= 1;
+				}
 			}
 	for (trade = 0; trade < 9; trade++)
 	{
