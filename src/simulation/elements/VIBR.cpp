@@ -204,7 +204,7 @@ int Element_VIBR_update(UPDATE_FUNC_ARGS)
 		if (BOUNDS_CHECK && (rx || ry))
 		{
 			r = pmap[y+ry][x+rx];
-			if (TYP(r) != PT_VIBR && TYP(r) != PT_BVBR && PT_VBLQ)
+			if (TYP(r) != PT_VIBR && TYP(r) != PT_BVBR && TYP(r) != PT_VIBR && TYP(r) != PT_BVBR)
 				continue;
 			if (parts[i].tmp > parts[ID(r)].tmp)
 			{
