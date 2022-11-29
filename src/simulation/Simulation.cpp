@@ -2779,6 +2779,7 @@ int Simulation::try_move(int i, int x, int y, int nx, int ny)
 		break;
 	case PT_VIBR:
 	case PT_BVBR:
+	case PT_VBLQ:
 		if ((elements[parts[i].type].Properties & TYPE_ENERGY))
 		{
 			parts[ID(r)].tmp += 20;
